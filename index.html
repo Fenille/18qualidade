@@ -75,11 +75,11 @@
       color:var(--cinza);
     }
 
-    /* BRASÃO CENTRAL ENTRE AS LINHAS – SUBIDO UM POUCO */
+    /* BRASÃO CENTRAL ENTRE AS LINHAS – DO JEITO QUE VOCÊ GOSTOU */
     .brasao-header{
       position:absolute;
       left:50%;
-      top:40%;                  /* aqui subi um pouco (antes 50%) */
+      top:40%;
       transform:translate(-50%, -50%);
       height:130px;
       width:auto;
@@ -187,7 +187,7 @@
 
     .banner-topo::after{
       right:0;
-      background:linear-gradient(to left, #000 30%, transparent 100%);
+      background:linear-gradient(to.left, #000 30%, transparent 100%);
     }
 
     .slide{
@@ -257,7 +257,7 @@
       font-size:1.3rem;
       cursor:pointer;
       z-index:4;
-      transition:0.2s.ease;
+      transition:0.2s ease;
       user-select:none;
       backdrop-filter:blur(4px);
     }
@@ -346,7 +346,7 @@
       height:62px;
       object-fit:contain;
       filter:drop-shadow(0 0 4px rgba(0,0,0,0.9));
-      transition:transform 0.16s ease, filter 0.16s ease;
+      transition:transform 0.16s ease, filter 0.16s.ease;
     }
 
     .pasta-titulo{
@@ -409,12 +409,16 @@
 
       header{
         flex-direction:column;
-        align-items:stretch;
+        align-items:center;
         gap:8px;
       }
 
+      .header-left{
+        text-align:center;
+      }
+
       .header-badge{
-        align-self:center;
+        align.self:center;
         justify-content:center;
         font-size:0.78rem;
       }
@@ -423,13 +427,13 @@
         font-size:1.7rem;
       }
 
-      .brasao-header{
-        height:80px;
-        top:44%;            /* também subi um pouco no mobile */
-      }
-
       header h2{
         font-size:0.95rem;
+      }
+
+      /* Se quiser mudar o comportamento do brasão no mobile depois, dá pra ajustar aqui */
+      .brasao-header{
+        height:80px;
       }
 
       .banner-topo{
@@ -477,7 +481,6 @@
 
       .brasao-header{
         height:68px;
-        top:44%;
       }
 
       .banner-topo{
@@ -634,45 +637,71 @@
   </footer>
 </div>
 
+<!-- ===== SCRIPT COMPLETO DO SLIDESHOW ===== -->
 <script>
-  const slides = document.querySelectorAll('.slide');
-  const dots = document.querySelectorAll('.dot');
-  const prevBtn = document.getElementById('prevBtn');
-  const nextBtn = document.getElementById('nextBtn');
+  // Garante que o script rode depois que o DOM estiver pronto
+  document.addEventListener('DOMContentLoaded', function () {
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
 
-  let current = 0;
-  let timer = null;
-  const interval = 6000;
+    let current = 0;
+    let timer = null;
+    const interval = 6000;
 
-  function showSlide(index){
-    slides[current].classList.remove('active');
-    dots[current].classList.remove('active');
+    function showSlide(index){
+      // remove ativo atual
+      slides[current].classList.remove('active');
+      dots[current].classList.remove('active');
 
-    current = (index + slides.length) % slides.length;
+      // calcula novo índice (loop)
+      current = (index + slides.length) % slides.length;
 
-    slides[current].classList.add('active');
-    dots[current].classList.add('active');
-  }
-
-  function startAuto(){
-    timer = setInterval(() => {
-      showSlide(current + 1);
-    }, interval);
-  }
-
-  function stopAuto(){
-    if(timer){
-      clearInterval(timer);
-      timer = null;
+      // ativa novo slide/dot
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
     }
-  }
 
-  dots.forEach(dot => {
-    dot.addEventListener('click', () => {
+    function startAuto(){
+      timer = setInterval(() => {
+        showSlide(current + 1);
+      }, interval);
+    }
+
+    function stopAuto(){
+      if(timer){
+        clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    // clique nos dots
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        stopAuto();
+        showSlide(+dot.dataset.index);
+        startAuto();
+      });
+    });
+
+    // botões anterior/próximo
+    prevBtn.addEventListener('click', () => {
       stopAuto();
-      showSlide(+dot.dataset.index);
+      showSlide(current - 1);
       startAuto();
     });
-  });
 
-  prevBtn.addEventListe
+    nextBtn.addEventListener('click', () => {
+      stopAuto();
+      showSlide(current + 1);
+      startAuto();
+    });
+
+    // inicia automático
+    startAuto();
+  });
+</script>
+
+</body>
+</html>
