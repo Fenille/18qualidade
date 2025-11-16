@@ -75,7 +75,7 @@
       color:var(--cinza);
     }
 
-    /* BRASÃO CENTRAL ENTRE AS LINHAS – DO JEITO QUE VOCÊ GOSTOU */
+    /* BRASÃO – DESKTOP: CENTRAL ENTRE AS LINHAS DO CABEÇALHO */
     .brasao-header{
       position:absolute;
       left:50%;
@@ -187,7 +187,7 @@
 
     .banner-topo::after{
       right:0;
-      background:linear-gradient(to.left, #000 30%, transparent 100%);
+      background:linear-gradient(to left, #000 30%, transparent 100%);
     }
 
     .slide{
@@ -271,6 +271,7 @@
     .nav-prev{ left:16px; }
     .nav-next{ right:16px; }
 
+    /* ===== CONTEÚDO ===== */
     main{
       padding:4px 2px 0;
     }
@@ -329,7 +330,7 @@
         transform 0.16s ease,
         box-shadow 0.16s ease,
         border-color 0.16s ease,
-        background 0.16s ease;
+        background 0.16s.ease;
     }
 
     .pasta-card a{
@@ -346,7 +347,7 @@
       height:62px;
       object-fit:contain;
       filter:drop-shadow(0 0 4px rgba(0,0,0,0.9));
-      transition:transform 0.16s ease, filter 0.16s.ease;
+      transition:transform 0.16s ease, filter 0.16s ease;
     }
 
     .pasta-titulo{
@@ -418,7 +419,7 @@
       }
 
       .header-badge{
-        align.self:center;
+        align-self:center;
         justify-content:center;
         font-size:0.78rem;
       }
@@ -431,9 +432,14 @@
         font-size:0.95rem;
       }
 
-      /* Se quiser mudar o comportamento do brasão no mobile depois, dá pra ajustar aqui */
+      /* MOBILE: BRASÃO NO FLUXO, ABAIXO DO TÍTULO, SEM SOBREPOR */
       .brasao-header{
-        height:80px;
+        position:static;
+        transform:none;
+        top:auto;
+        height:90px;
+        margin-top:6px;
+        pointer-events:none;
       }
 
       .banner-topo{
@@ -480,7 +486,7 @@
       }
 
       .brasao-header{
-        height:68px;
+        height:78px;
       }
 
       .banner-topo{
@@ -490,7 +496,7 @@
 
       .section-header{
         flex-direction:column;
-        align-items:flex-start;
+        align.items:flex-start;
       }
 
       .section-meta{
@@ -545,6 +551,7 @@
       <div class="slide"><img src="banner5.jpg" alt="Banner 5"></div>
       <div class="slide"><img src="banner6.jpg" alt="Banner 6"></div>
       <div class="slide"><img src="banner7.jpg" alt="Banner 7"></div>
+
       <div class="banner-overlay"></div>
 
       <div class="nav-btn nav-prev" id="prevBtn">&#10094;</div>
@@ -637,33 +644,32 @@
   </footer>
 </div>
 
-<!-- ===== SCRIPT COMPLETO DO SLIDESHOW ===== -->
+<!-- ===== SCRIPT DO SLIDESHOW ===== -->
 <script>
-  // Garante que o script rode depois que o DOM estiver pronto
   document.addEventListener('DOMContentLoaded', function () {
     const slides = document.querySelectorAll('.slide');
-    const dots = document.querySelectorAll('.dot');
+    const dots   = document.querySelectorAll('.dot');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
+
+    if (!slides.length || !dots.length) return;
 
     let current = 0;
     let timer = null;
     const interval = 6000;
 
     function showSlide(index){
-      // remove ativo atual
       slides[current].classList.remove('active');
       dots[current].classList.remove('active');
 
-      // calcula novo índice (loop)
       current = (index + slides.length) % slides.length;
 
-      // ativa novo slide/dot
       slides[current].classList.add('active');
       dots[current].classList.add('active');
     }
 
     function startAuto(){
+      stopAuto();
       timer = setInterval(() => {
         showSlide(current + 1);
       }, interval);
@@ -676,7 +682,6 @@
       }
     }
 
-    // clique nos dots
     dots.forEach(dot => {
       dot.addEventListener('click', () => {
         stopAuto();
@@ -685,20 +690,20 @@
       });
     });
 
-    // botões anterior/próximo
-    prevBtn.addEventListener('click', () => {
-      stopAuto();
-      showSlide(current - 1);
-      startAuto();
-    });
+    if (prevBtn && nextBtn){
+      prevBtn.addEventListener('click', () => {
+        stopAuto();
+        showSlide(current - 1);
+        startAuto();
+      });
 
-    nextBtn.addEventListener('click', () => {
-      stopAuto();
-      showSlide(current + 1);
-      startAuto();
-    });
+      nextBtn.addEventListener('click', () => {
+        stopAuto();
+        showSlide(current + 1);
+        startAuto();
+      });
+    }
 
-    // inicia automático
     startAuto();
   });
 </script>
